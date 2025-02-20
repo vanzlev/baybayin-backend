@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
 import pytesseract
 from PIL import Image
 import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend-backend communication
+CORS(app)
 
-# If using Windows, set the Tesseract-OCR path
-pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+# Remove the Windows-specific Tesseract path for Render (Linux uses default path)
+# pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"  <-- REMOVE THIS
 
 UPLOAD_FOLDER = "uploads"
 if not os.path.exists(UPLOAD_FOLDER):
@@ -32,4 +32,4 @@ def ocr():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)  # Ensure it's accessible on Render
